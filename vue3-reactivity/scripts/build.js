@@ -1,7 +1,7 @@
 /*
  * @Author: 李思豪
  * @Date: 2022-06-23 11:15:06
- * @LastEditTime: 2022-06-23 16:15:25
+ * @LastEditTime: 2022-06-24 09:35:36
  * @Description: file content
  * @LastEditors: 李思豪
  */
@@ -14,7 +14,7 @@ const execa = require('execa');// 可以理解成打开一个进程去做打包�
 // 读取目录中要打包的文件夹
 const dirs = fs.readdirSync("packages").filter(f=>(fs.statSync(`packages/${f}`).isDirectory()))
 
-// 并行打包所有文件
+// 并发去打包，每次打包都调用build方法
 async function build(target){
  await execa('rollup',['-c','--environment',`TARGET:${target}`],{stdio:'inherit'}); // 子进程的输出 需要在父进程中打印 await execa('rollup',['-c','--environment',`TARGET:${target}`],{stdio:'inherit'}); // 子进程的输出 需要在父进程中打印
 }
@@ -26,6 +26,6 @@ async function runParallel(dirs,iterFn){
   return Promise.all(result); // 存储打包时的promise，等待所有全部打包完毕后，调用成功
 }
 
-runParallel(dirs,build).then(()=>{ // 存储打包时的 promise, 等待所有全部打包完毕后，调用成功
+runParallel(dirs,build).then(()=>{
     console.log('成功')
 })
