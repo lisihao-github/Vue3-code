@@ -1,7 +1,7 @@
 <!--
  * @Author: 李思豪
  * @Date: 2022-06-23 10:01:32
- * @LastEditTime: 2022-06-23 10:59:50
+ * @LastEditTime: 2022-06-24 10:00:53
  * @Description: file content
  * @LastEditors: 李思豪
 -->
@@ -26,8 +26,6 @@
 
 ## 1.Monorepo 介绍
 
----
-
 Monorepo 是管理项目代码的一个方式，指在一个项目仓库( repo)中管理多个模块/包(package)。
 
 - 一个仓库可维护多个模块，不用到处找仓库
@@ -35,8 +33,6 @@ Monorepo 是管理项目代码的一个方式，指在一个项目仓库( repo)�
   > 缺点:仓库体积会变大。
 
 ## 2.vue3 项目结构
-
----
 
 - reactivity:响应式系统
 - runtime-core :与平台无关的运行时核心(可以创建针对特定平台的运行时·自定义渲染器)

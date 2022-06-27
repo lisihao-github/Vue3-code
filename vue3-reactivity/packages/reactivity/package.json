@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "buildOptions": {
-    "name": "VueReactiveity",
+    "name": "VueReactivity",
     "formats": [
       "esm-bundler",
       "cjs",

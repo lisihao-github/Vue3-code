@@ -1,5 +1,5 @@
 {
-  "name": "@vue/shared",
+  "name": "examples",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,11 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "buildOptions": {
-    "name": "shared",
-    "formats": [
-      "esm-bundler",
-      "cjs"
-    ]
+  "dependencies": {
+    "@vue/reactivity": "^3.2.37"
   }
 }

@@ -1,0 +1,26 @@
+<!--
+ * @Author: 李思豪
+ * @Date: 2022-06-24 10:07:01
+ * @LastEditTime: 2022-06-24 15:17:11
+ * @Description: file content
+ * @LastEditors: 李思豪
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
+  <script>
+    //  let { reactive, shallowReactive, readonly, shallowReadonly, effect } = reactivity;
+     let { reactive} = VueReactivity;
+     let person= {name:'xx',age:18}
+     let proxy = reactive(person)
+    //  console.log(proxy)
+  </script>
+</body>
+</html>
