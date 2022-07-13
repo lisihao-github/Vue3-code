@@ -1,7 +1,7 @@
 <!--
  * @Author: 李思豪
  * @Date: 2022-06-24 10:07:01
- * @LastEditTime: 2022-06-24 15:17:11
+ * @LastEditTime: 2022-07-13 16:05:12
  * @Description: file content
  * @LastEditors: 李思豪
 -->
@@ -16,11 +16,20 @@
 <body>
   <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
   <script>
-    //  let { reactive, shallowReactive, readonly, shallowReadonly, effect } = reactivity;
-     let { reactive} = VueReactivity;
+     let { reactive, shallowReactive, readonly, shallowReadonly, effect } = VueReactivity;
      let person= {name:'xx',age:18}
      let proxy = reactive(person)
+     let proxy2 = readonly(person)
+     console.log(proxy === proxy2)
     //  console.log(proxy)
+
+
+    /*
+     * reactive 会将对象里的所有对象都进行代理 proxy
+     * shallowReactive 只代理第一层对象
+     * readonly 表示会被代理 但是, 不进行依赖收集可以节约性能。
+     * shallowReadonly 因为外层没有收集依赖, 虽然里层能改 但不会更新视图
+    */
   </script>
 </body>
 </html>
