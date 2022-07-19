@@ -1,13 +1,14 @@
 /*
 * @Author: 李思豪
 * @Date: 2022-07-13 16:07:17
- * @LastEditTime: 2022-07-13 16:47:33
+ * @LastEditTime: 2022-07-19 15:03:22
 * @Description: file content
  * @LastEditors: 李思豪
 */
-import { _extend } from "@vue/shared"
+import { _extend, _hasChanged, _hasOwn, _isArray, _isIntegerKey, _isObject } from "@vue/shared"
+import { reactive, readonly } from "./reactive";
 
-function createGetter(isReadonly=false,shallow= false){
+function createGetter(isReadonly = false, shallow = false){
   /**
    * @param target 是原来的对象
    * @param key 去取什么属性
@@ -17,16 +18,40 @@ function createGetter(isReadonly=false,shallow= false){
     // Reflect 就是后续慢慢替换掉 Object 对象, 一般是会用 proxy 会配合 Reflect
     // target[key] === Reflect.get(target, key, receiver)
     const res = Reflect.get(target, key, receiver)
-    console.log('用户取值了')
+    if(shallow) return res;
+    if(!readonly){
+      console.log('收集当前属性, 如果属性变化了, 稍后可能要更新视图')
+    }
+    if(_isObject(res)){ // 懒递归, 当我们取值的时候才去做 递归代理, 如果不取默认值代理一层
+      return isReadonly ? readonly(res) : reactive(res)
+    }
     return res
   }
+  // vue3 针对的是对象来进行劫持, 不用改写原来的对象, 如果是嵌套, 当取值的时候才会代理
+  // vue2 针对的是属性劫持, 改写了原来对象, 一上来就递归的。
+  // vue3 可以对不存在的属性进行获取, 也会走 get 方法, proxy 支持数组。
 } 
 
+// 设置属性, 可能是新增属性, 还有可能是修改属性值
 function createSetter(shallow = false){
+  // 针对数组而言, 如果调用 push 方法, 就会产生 2 次触发
+  // 1. 给数组新增了一项，同时也更改了长度
+  // 2. 因为更改了长度再次触发 set (第二次触发是无意义的)
   return function set(target, key, value, receiver){
+    const oldValue = target[key]
+    console.log(target, key, value, receiver)
+    // 判断数组是新增还是修改
+    console.log(_isIntegerKey(key))
+    
+    let hadKey = _isArray(target) && _isIntegerKey(key) ? Number(key) < target.length : _hasOwn(target, key)
+    // 先判断有没有，再去设置值
     const res = Reflect.set(target, key, value, receiver)
-    console.log('用户设置值了, 可以更新视图')
-    return res;
+    if(!hadKey){
+      console.log('新增')
+    }else if(_hasChanged(oldValue, value)){
+      console.log('修改')
+    }
+    return res
   }
 }
 
@@ -35,7 +60,7 @@ const shallowGet = createGetter(false,true)
 const readonlyGet = createGetter(true)
 const shallowReadonlyGet = createGetter(true,true)
 
-const set = createSetter(false)
+const set = createSetter()
 const shallowSet = createSetter(true)
 
 export const mutableHandler = {

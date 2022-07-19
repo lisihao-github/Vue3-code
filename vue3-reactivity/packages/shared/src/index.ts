@@ -1,17 +1,20 @@
 /*
  * @Author: 李思豪
  * @Date: 2022-06-23 11:05:10
- * @LastEditTime: 2022-07-13 16:27:14
+ * @LastEditTime: 2022-07-19 14:53:47
  * @Description: file content
  * @LastEditors: 李思豪
  */
 
-export function _isObject(target) {
-  return typeof target === 'object' && target !== null
-}
+export const _isObject = (value) => typeof value == 'object' && value !== null;
 
-export function _extend(...args){
-  return Object.assign(args)
-}
+export const _extend = Object.assign
 
+export const _isArray = Array.isArray
 
+export const _isIntegerKey = (key) => parseInt(key) + '' === key
+
+let hasOwnpRroperty = Object.prototype.hasOwnProperty;
+export const _hasOwn = (target, key) => hasOwnpRroperty.call(target, key);
+
+export const _hasChanged =(oldValue,value) => oldValue !== value

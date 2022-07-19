@@ -1,7 +1,7 @@
 /*
  * @Author: 李思豪
  * @Date: 2022-06-24 14:58:48
- * @LastEditTime: 2022-07-13 16:27:20
+ * @LastEditTime: 2022-07-19 14:28:56
  * @Description: file content
  * @LastEditors: 李思豪
  */
@@ -13,16 +13,16 @@ import { mutableHandler, readonlyHandlers, shallowReactiveHandlers, shallowReado
  * @param target
  */
 export function reactive(target) {
-  createReactiveObject(target, true, mutableHandler);
+  return createReactiveObject(target, false, mutableHandler);
 }
 export function shallowReactive(target) {
-  createReactiveObject(target, true, shallowReactiveHandlers);
+ return createReactiveObject(target, false, shallowReactiveHandlers);
 }
 export function readonly(target) {
-  createReactiveObject(target, false, readonlyHandlers);
+ return createReactiveObject(target, true, readonlyHandlers);
 }
 export function shallowReadonly(target) {
-  createReactiveObject(target, false, shallowReadonlyHanlders);
+ return createReactiveObject(target, true, shallowReadonlyHanlders);
 }
 
 /**
