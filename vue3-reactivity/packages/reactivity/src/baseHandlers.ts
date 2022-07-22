@@ -1,13 +1,20 @@
 /*
 * @Author: 李思豪
 * @Date: 2022-07-13 16:07:17
- * @LastEditTime: 2022-07-19 15:03:22
+ * @LastEditTime: 2022-07-22 16:32:09
 * @Description: file content
  * @LastEditors: 李思豪
 */
 import { _extend, _hasChanged, _hasOwn, _isArray, _isIntegerKey, _isObject } from "@vue/shared"
+import { track, trigger } from "./effect";
 import { reactive, readonly } from "./reactive";
 
+/**
+ * 
+ * @param isReadonly 
+ * @param shallow 
+ * @returns 
+ */
 function createGetter(isReadonly = false, shallow = false){
   /**
    * @param target 是原来的对象
@@ -19,8 +26,9 @@ function createGetter(isReadonly = false, shallow = false){
     // target[key] === Reflect.get(target, key, receiver)
     const res = Reflect.get(target, key, receiver)
     if(shallow) return res;
-    if(!readonly){
-      console.log('收集当前属性, 如果属性变化了, 稍后可能要更新视图')
+    if(!isReadonly){
+      // console.log('收集当前属性, 如果属性变化了, 稍后可能要更新视图')
+      track(target, 'get', key)
     }
     if(_isObject(res)){ // 懒递归, 当我们取值的时候才去做 递归代理, 如果不取默认值代理一层
       return isReadonly ? readonly(res) : reactive(res)
@@ -32,33 +40,36 @@ function createGetter(isReadonly = false, shallow = false){
   // vue3 可以对不存在的属性进行获取, 也会走 get 方法, proxy 支持数组。
 } 
 
-// 设置属性, 可能是新增属性, 还有可能是修改属性值
+/**
+ * 设置属性, 可能是新增属性, 还有可能是修改属性值
+ * @param shallow 
+ * @returns 
+ */
 function createSetter(shallow = false){
   // 针对数组而言, 如果调用 push 方法, 就会产生 2 次触发
   // 1. 给数组新增了一项，同时也更改了长度
   // 2. 因为更改了长度再次触发 set (第二次触发是无意义的)
   return function set(target, key, value, receiver){
     const oldValue = target[key]
-    console.log(target, key, value, receiver)
     // 判断数组是新增还是修改
-    console.log(_isIntegerKey(key))
-    
     let hadKey = _isArray(target) && _isIntegerKey(key) ? Number(key) < target.length : _hasOwn(target, key)
     // 先判断有没有，再去设置值
     const res = Reflect.set(target, key, value, receiver)
     if(!hadKey){
       console.log('新增')
+      trigger(target, 'add', key,value);
     }else if(_hasChanged(oldValue, value)){
       console.log('修改')
+      trigger(target, 'set', key, value, oldValue)
     }
     return res
   }
 }
 
 const get = createGetter()
-const shallowGet = createGetter(false,true)
+const shallowGet = createGetter(false, true)
 const readonlyGet = createGetter(true)
-const shallowReadonlyGet = createGetter(true,true)
+const shallowReadonlyGet = createGetter(true, true)
 
 const set = createSetter()
 const shallowSet = createSetter(true)

@@ -25,6 +25,7 @@ export function shallowReadonly(target) {
  return createReactiveObject(target, true, shallowReadonlyHanlders);
 }
 
+
 /**
  * @param target 创建代理的目标
  * @param isReadonly 当前是不是仅读的

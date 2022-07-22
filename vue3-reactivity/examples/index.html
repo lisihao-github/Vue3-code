@@ -1,7 +1,7 @@
 <!--
  * @Author: 李思豪
  * @Date: 2022-06-24 10:07:01
- * @LastEditTime: 2022-07-13 16:05:12
+ * @LastEditTime: 2022-07-22 16:38:40
  * @Description: file content
  * @LastEditors: 李思豪
 -->
@@ -14,15 +14,25 @@
   <title>Document</title>
 </head>
 <body>
+  <div id="app"></div>
   <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
   <script>
      let { reactive, shallowReactive, readonly, shallowReadonly, effect } = VueReactivity;
-     let person= {name:'xx',age:18}
-     let proxy = reactive(person)
-     let proxy2 = readonly(person)
-     console.log(proxy === proxy2)
-    //  console.log(proxy)
 
+    let school = { name:'xxx', age: 18, address: { num: 517 }, arr: [ 1, 2, 3]}
+    let proxy = reactive(school)
+    // let proxy1 = reactive({name:'zf'})
+    // proxy.arr.push(100)
+    // 默认这个函数会执行一次, 执行的时候应该把用到的属性和这个 effect 关联起来.
+    effect(()=>{
+      console.log(proxy.name)
+      console.log(proxy.age)
+    })
+    setTimeout(()=>{
+      proxy.name = 'jw'
+    })
+
+    // 下次更新属性的时候 会再次执行这个 effect
 
     /*
      * reactive 会将对象里的所有对象都进行代理 proxy
